@@ -12,7 +12,7 @@ export default {
         const latency = `🏓Latency is ${
             msg.createdTimestamp - message.createdTimestamp
         }ms. API Latency is ${Math.round(client.ws.ping)}ms`;
-        embed.setDescription(latency);
+        embed.setDescription(latency).setTimestamp();
         await message.author.send({
             embeds: [embed],
         });

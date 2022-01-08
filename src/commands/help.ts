@@ -39,7 +39,8 @@ export default {
         const embed = new MessageEmbed()
             .setColor("GREEN")
             .setTitle("Commands")
-            .setDescription(welcome_msg);
+            .setDescription(welcome_msg)
+            .setTimestamp();
         await message.author.send({
             embeds: [embed],
         });

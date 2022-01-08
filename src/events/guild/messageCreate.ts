@@ -15,7 +15,8 @@ export default {
                 )
                 .setDescription(
                     "I cannot reply to Personal Messages. Please use the command in the server!"
-                );
+                )
+                .setTimestamp();
             await message.channel.send({
                 embeds: [embed],
             });
@@ -45,7 +46,8 @@ export default {
                 .setThumbnail(
                     "https://media.giphy.com/media/YuqLrVVVoDK7gqb1Vw/giphy.gif"
                 )
-                .setDescription(`${message.author} Invalid Command.`);
+                .setDescription(`${message.author} Invalid Command.`)
+                .setTimestamp();
             await message.reply({
                 embeds: [done_embed],
             });

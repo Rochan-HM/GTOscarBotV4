@@ -24,7 +24,8 @@ export default {
         const embed = new MessageEmbed()
             .setColor("GREEN")
             .setTitle("Welcome!!")
-            .setDescription(welcome_msg);
+            .setDescription(welcome_msg)
+            .setTimestamp();
         await args.user.send({
             embeds: [embed],
         });

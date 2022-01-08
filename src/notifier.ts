@@ -31,7 +31,8 @@ export default async (client: DiscordClient, msg: string, crn: number) => {
         const embed = new MessageEmbed()
             .setColor(colorCode)
             .setTitle(msg)
-            .setDescription(description);
+            .setDescription(description)
+            .setTimestamp();
         const discordUser = await client.users.fetch(user.userId!);
         await discordUser.send({
             embeds: [embed],

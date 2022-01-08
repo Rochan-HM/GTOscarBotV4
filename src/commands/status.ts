@@ -13,7 +13,8 @@ export default {
             .setThumbnail(
                 "https://media.giphy.com/media/tf9jjMcO77YzV4YPwE/giphy.gif"
             )
-            .setDescription(`${message.author} Please check your DM`);
+            .setDescription(`${message.author} Please check your DM`)
+            .setTimestamp();
         await message.reply({
             embeds: [done_embed],
         });
@@ -53,7 +54,8 @@ export default {
             const embed = new MessageEmbed()
                 .setColor("GREEN")
                 .setTitle("Status")
-                .setDescription(msg);
+                .setDescription(msg)
+                .setTimestamp();
             await message.author.send({
                 embeds: [embed],
             });
@@ -63,7 +65,8 @@ export default {
                 .setTitle("Error")
                 .setDescription(
                     "Invalid Message Format or Class is not being tracked. Track it first to get current status!"
-                );
+                )
+                .setTimestamp();
             await message.author.send({
                 embeds: [embed],
             });

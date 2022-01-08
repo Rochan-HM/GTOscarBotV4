@@ -14,7 +14,8 @@ export default {
             .setThumbnail(
                 "https://media.giphy.com/media/tf9jjMcO77YzV4YPwE/giphy.gif"
             )
-            .setDescription(`${message.author} Please check your DM`);
+            .setDescription(`${message.author} Please check your DM`)
+            .setTimestamp();
         await message.reply({
             embeds: [done_embed],
         });
@@ -139,7 +140,8 @@ export default {
             const embed = new MessageEmbed()
                 .setColor("GREEN")
                 .setTitle("Track")
-                .setDescription(`Successfully tracking ${alias}: CRN ${crn}`);
+                .setDescription(`Successfully tracking ${alias}: CRN ${crn}`)
+                .setTimestamp();
             await message.author.send({
                 embeds: [embed],
             });
@@ -148,7 +150,8 @@ export default {
             const embed = new MessageEmbed()
                 .setColor("RED")
                 .setTitle("Error")
-                .setDescription(err.message);
+                .setDescription(err.message)
+                .setTimestamp();
             await message.author.send({
                 embeds: [embed],
             });
