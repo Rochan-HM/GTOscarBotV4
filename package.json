@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pm2 start ./build/index.js",
+    "start": "forever start ./build/index.js",
     "dev": "ts-node-dev ./src/index.ts",
     "tsc": "tsc",
     "primsa": "primsa",
     "build": "tsc --build --clean && tsc",
-    "pm2": "pm2",
+    "forever": "forever",
     "postinstall": "npm run build"
   },
   "devDependencies": {
@@ -24,7 +24,7 @@
     "cheerio": "^1.0.0-rc.10",
     "discord.js": "^13.5.0",
     "dotenv": "^10.0.0",
-    "pm2": "^5.1.2",
+    "forever": "^4.0.1",
     "throat": "^6.0.1"
   }
 }
