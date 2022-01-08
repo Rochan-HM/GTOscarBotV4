@@ -10,7 +10,8 @@
     "tsc": "tsc",
     "primsa": "primsa",
     "build": "tsc --build --clean && tsc",
-    "pm2": "pm2"
+    "pm2": "pm2",
+    "postinstall": "npm run build"
   },
   "devDependencies": {
     "prisma": "^3.7.0",
