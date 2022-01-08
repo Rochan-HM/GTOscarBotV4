@@ -35,8 +35,6 @@ process.on("message", async (msg: string) => {
         return;
     }
 
-    console.log(previous.length, JSON.stringify(previous));
-
     if (previous.length === 0) {
         await sleep(SLEEP_TIME);
         sendMessage(false, "Empty");
