@@ -140,7 +140,14 @@ export default {
             const embed = new MessageEmbed()
                 .setColor("GREEN")
                 .setTitle("Track")
-                .setDescription(`Successfully tracking ${alias}: CRN ${crn}`)
+                .setDescription(
+                    `Successfully tracking ${alias}: CRN ${crn}
+                
+                **Status:**
+                Class Seats: ${class_seats}
+                Waitlist Seats: ${wl_seats}
+                `
+                )
                 .setTimestamp();
             await message.author.send({
                 embeds: [embed],
