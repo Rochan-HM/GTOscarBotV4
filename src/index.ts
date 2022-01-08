@@ -10,8 +10,6 @@ const envs = [
     "DISCORD_TOKEN",
     "DISCORD_PREFIX",
     "SLEEP_TIME",
-    "SUCCESS",
-    "FAILURE",
     "OSCAR_URL",
     "PAUSED",
     "CONCURRENCY",
