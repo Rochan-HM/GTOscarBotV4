@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "forever start ./build/index.js",
+    "start": "nodemon ./build/index.js",
     "dev": "ts-node-dev ./src/index.ts",
     "tsc": "tsc",
     "primsa": "primsa",
@@ -24,7 +24,7 @@
     "cheerio": "^1.0.0-rc.10",
     "discord.js": "^13.5.0",
     "dotenv": "^10.0.0",
-    "forever": "^4.0.1",
+    "nodemon": "^2.0.15",
     "throat": "^6.0.1"
   }
 }
