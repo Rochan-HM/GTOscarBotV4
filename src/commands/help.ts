@@ -45,7 +45,8 @@ export default {
             ephemeral: true,
         });
 
-        const user = await client.users.fetch(interaction.member.user.id);
+        const user = await client.users.fetch(interaction.member!.user.id);
+
         await user.send({
             embeds: [
                 new MessageEmbed()
