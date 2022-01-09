@@ -31,29 +31,54 @@ export default {
         interaction: MessageComponentInteraction,
         client: DiscordClient
     ) {
-        await interaction.reply("To be implemented!");
+        await interaction.reply({
+            embeds: [
+                new MessageEmbed()
+                    .setColor("GREEN")
+                    .setTitle("Done")
+                    .setThumbnail(
+                        "https://media.giphy.com/media/tf9jjMcO77YzV4YPwE/giphy.gif"
+                    )
+                    .setDescription(`Please check your DM`)
+                    .setTimestamp(),
+            ],
+            ephemeral: true,
+        });
+
+        const user = await client.users.fetch(interaction.member.user.id);
+        await user.send({
+            embeds: [
+                new MessageEmbed()
+                    .setColor("GREEN")
+                    .setTitle("Commands")
+                    .setDescription(help_message)
+                    .setTimestamp(),
+            ],
+        });
     },
     async execute(client: DiscordClient, message: Message, args: any) {
-        const done_embed = new MessageEmbed()
-            .setColor("GREEN")
-            .setTitle("Done")
-            .setThumbnail(
-                "https://media.giphy.com/media/tf9jjMcO77YzV4YPwE/giphy.gif"
-            )
-            .setDescription(`${message.author} Please check your DM`)
-            .setTimestamp();
         await message.reply({
-            embeds: [done_embed],
+            embeds: [
+                new MessageEmbed()
+                    .setColor("GREEN")
+                    .setTitle("Done")
+                    .setThumbnail(
+                        "https://media.giphy.com/media/tf9jjMcO77YzV4YPwE/giphy.gif"
+                    )
+                    .setDescription(`${message.author} Please check your DM`)
+                    .setTimestamp(),
+            ],
         });
         await message.delete();
 
-        const embed = new MessageEmbed()
-            .setColor("GREEN")
-            .setTitle("Commands")
-            .setDescription(help_message)
-            .setTimestamp();
         await message.author.send({
-            embeds: [embed],
+            embeds: [
+                new MessageEmbed()
+                    .setColor("GREEN")
+                    .setTitle("Commands")
+                    .setDescription(help_message)
+                    .setTimestamp(),
+            ],
         });
     },
 };
