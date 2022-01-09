@@ -32,7 +32,7 @@ export default {
         interaction: MessageComponentInteraction,
         client: DiscordClient
     ) {
-        await sendConfirmation(interaction, undefined);
+        await sendConfirmation(interaction);
 
         const user = await client.users.fetch(interaction.member!.user.id);
 
@@ -47,7 +47,7 @@ export default {
         });
     },
     async execute(client: DiscordClient, message: Message, args: any) {
-        await sendConfirmation(undefined, message);
+        await sendConfirmation(message);
 
         await message.delete();
 
