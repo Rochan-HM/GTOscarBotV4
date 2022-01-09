@@ -1,4 +1,5 @@
-import { Message, MessageEmbed } from "discord.js";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { Message, MessageComponentInteraction, MessageEmbed } from "discord.js";
 import prisma from "../database";
 import { scrape } from "../scraper";
 import { DiscordClient } from "../types";
@@ -7,6 +8,15 @@ export default {
     name: "track",
     aliases: ["tracking", "tracks", "tracked"],
     description: "Track a new class!",
+    data: new SlashCommandBuilder()
+        .setName("track")
+        .setDescription("Track a new class!"),
+    async execute_interaction(
+        interaction: MessageComponentInteraction,
+        client: DiscordClient
+    ) {
+        await interaction.reply("To be implemented!");
+    },
     async execute(client: DiscordClient, message: Message, args: any) {
         const done_embed = new MessageEmbed()
             .setColor("GREEN")

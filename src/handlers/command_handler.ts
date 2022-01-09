@@ -12,8 +12,8 @@ export async function execute(client: DiscordClient) {
             path.resolve(__dirname, "..", "commands", file)
         );
         command = command.default;
-        if (command.name) {
-            client.commands.set(command.name, command);
+        if (command.data.name) {
+            client.commands.set(command.data.name, command);
         } else {
             continue;
         }

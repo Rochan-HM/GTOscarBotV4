@@ -5,6 +5,8 @@ import { DiscordClient, Message } from "./types";
 import path from "path";
 require("dotenv").config();
 
+import cleaner from "./cleaner";
+
 const envs = [
     "DATABASE_URL",
     "DISCORD_TOKEN",
@@ -14,6 +16,7 @@ const envs = [
     "PAUSED",
     "CONCURRENCY",
     "ADMIN_ID",
+    "BOT_CLIENT_ID",
 ];
 
 for (const env of envs) {
@@ -39,14 +42,22 @@ const client = new Client({
 client.commands = new Collection();
 client.events = new Collection();
 
-["command_handler", "event_handler"].forEach(async (handler) => {
-    const hlr = await import(path.resolve(__dirname, "handlers", `${handler}`));
-    hlr.execute(client);
-});
+["command_register", "command_handler", "event_handler"].forEach(
+    async (handler) => {
+        const hlr = await import(
+            path.resolve(__dirname, "handlers", `${handler}`)
+        );
+        hlr.execute(client);
+    }
+);
 
 client.login(process.env.DISCORD_TOKEN!);
 
 if (!process.env.isPaused!) {
+    // Start cleaner daemon
+    cleaner();
+
+    // Start OSCAR daemon
     const worker = fork(path.resolve(__dirname, "worker"));
     console.log("Launching worker child fork");
     worker.send("start");

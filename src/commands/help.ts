@@ -1,4 +1,5 @@
-import Discord, { Message, MessageEmbed } from "discord.js";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { Message, MessageComponentInteraction, MessageEmbed } from "discord.js";
 import { DiscordClient } from "../types";
 
 const DISCORD_PREFIX = process.env.DISCORD_PREFIX;
@@ -22,6 +23,15 @@ export default {
     name: "help",
     aliases: ["commands"],
     description: "Shows the Bot Usage Instructions!",
+    data: new SlashCommandBuilder()
+        .setName("help")
+        .setDescription("Shows the Bot Usage Instructions!"),
+    async execute_interaction(
+        interaction: MessageComponentInteraction,
+        client: DiscordClient
+    ) {
+        await interaction.reply("To be implemented!");
+    },
     async execute(client: DiscordClient, message: Message, args: any) {
         const done_embed = new MessageEmbed()
             .setColor("GREEN")

@@ -1,11 +1,21 @@
-import { Message, MessageEmbed } from "discord.js";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { Message, MessageComponentInteraction, MessageEmbed } from "discord.js";
 import prisma from "../database";
 import { DiscordClient } from "../types";
 
 export default {
     name: "untrack",
     aliases: ["untracking", "untracked", "untracks"],
-    description: "Get the current status of a class!",
+    description: "Stop tracking a particular class!",
+    data: new SlashCommandBuilder()
+        .setName("untrack")
+        .setDescription("Stop tracking a particular class!"),
+    async execute_interaction(
+        interaction: MessageComponentInteraction,
+        client: DiscordClient
+    ) {
+        await interaction.reply("To be implemented!");
+    },
     async execute(client: DiscordClient, message: Message, args: any) {
         const done_embed = new MessageEmbed()
             .setColor("GREEN")
@@ -21,6 +31,7 @@ export default {
 
         try {
             let exp, m, crn, userId;
+            // Admin user
             if (message.author.id === process.env.ADMIN_ID!) {
                 exp = /crn (\d+).?(sudo)?.?(\w+)?/gi;
                 m = exp.exec(message.content);
@@ -78,20 +89,6 @@ export default {
             });
 
             await message.delete();
-
-            // Clean up database if no other user is tracking the same course
-            const remaining_users = await prisma.userTracking.count({
-                where: {
-                    crnId: crn,
-                },
-            });
-            if (remaining_users === 0) {
-                await prisma.cRN.delete({
-                    where: {
-                        crn_id: crn,
-                    },
-                });
-            }
         } catch (e) {
             const embed = new MessageEmbed()
                 .setColor("RED")

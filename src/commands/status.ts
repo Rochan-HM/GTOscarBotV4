@@ -1,4 +1,5 @@
-import { Message, MessageEmbed } from "discord.js";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { Message, MessageComponentInteraction, MessageEmbed } from "discord.js";
 import prisma from "../database";
 import { DiscordClient } from "../types";
 
@@ -6,6 +7,15 @@ export default {
     name: "status",
     aliases: ["statusing"],
     description: "Get the current status of a class!",
+    data: new SlashCommandBuilder()
+        .setName("status")
+        .setDescription("Get the current status of a class!"),
+    async execute_interaction(
+        interaction: MessageComponentInteraction,
+        client: DiscordClient
+    ) {
+        await interaction.reply("To be implemented!");
+    },
     async execute(client: DiscordClient, message: Message, args: any) {
         const done_embed = new MessageEmbed()
             .setColor("GREEN")

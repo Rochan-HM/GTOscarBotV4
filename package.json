@@ -1,33 +1,40 @@
 {
-  "name": "gtoscarbotv4",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./build/index.js",
-    "dev": "ts-node-dev ./src/index.ts",
-    "tsc": "tsc",
-    "primsa": "primsa",
-    "build": "tsc --build --clean && tsc",
-    "forever": "forever",
-    "postinstall": "npm run build"
-  },
-  "devDependencies": {
-    "prisma": "^3.7.0",
-    "ts-node-dev": "^1.1.8",
-    "typescript": "^4.5.4"
-  },
-  "dependencies": {
-    "@prisma/client": "^3.7.0",
-    "axios": "^0.24.0",
-    "cheerio": "^1.0.0-rc.10",
-    "discord.js": "^13.5.0",
-    "dotenv": "^10.0.0",
-    "nodemon": "^2.0.15",
-    "throat": "^6.0.1"
-  },
-  "engines": {
-    "node": "16.13"
-  }
+    "name": "gtoscarbotv4",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node ./build/index.js",
+        "dev": "ts-node-dev",
+        "devStart": "ts-node-dev ./src/index.ts",
+        "tsc": "tsc",
+        "primsa": "primsa",
+        "build": "del-cli build/ && tsc",
+        "forever": "forever",
+        "postinstall": "npm run build"
+    },
+    "devDependencies": {
+        "@types/node-cron": "^3.0.1",
+        "del-cli": "^4.0.1",
+        "prisma": "^3.7.0",
+        "ts-node-dev": "^1.1.8",
+        "typescript": "^4.5.4"
+    },
+    "dependencies": {
+        "@discordjs/builders": "^0.11.0",
+        "@discordjs/rest": "^0.2.0-canary.0",
+        "@prisma/client": "^3.7.0",
+        "axios": "^0.24.0",
+        "cheerio": "^1.0.0-rc.10",
+        "discord-api-types": "^0.26.1",
+        "discord.js": "^13.5.0",
+        "dotenv": "^10.0.0",
+        "node-cron": "^3.0.0",
+        "nodemon": "^2.0.15",
+        "throat": "^6.0.1"
+    },
+    "engines": {
+        "node": "16.13"
+    }
 }
