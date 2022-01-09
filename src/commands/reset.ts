@@ -60,7 +60,7 @@ export default {
                 .setColor("GREEN")
                 .setTitle("Track")
                 .setDescription(
-                    `Successfully untracked ${removedCourses.count} course(s)!`
+                    `Successfully untracked ${removedCourses.count} course(s)`
                 )
                 .setTimestamp();
             await message.author.send({

@@ -3,7 +3,7 @@ import { Message, MessageComponentInteraction, MessageEmbed } from "discord.js";
 import { DiscordClient } from "../types";
 
 const DISCORD_PREFIX = process.env.DISCORD_PREFIX;
-const welcome_msg = `
+const help_message = `
 **BOT COMMANDS**
 \`${DISCORD_PREFIX}track CRN xxxxx\` to track a specific CRN.
 \`${DISCORD_PREFIX}track CRN xxxxx as Class Name\` to track a specific CRN along with an identifier.
@@ -11,6 +11,7 @@ const welcome_msg = `
 \`${DISCORD_PREFIX}status CRN xxxxx\` to get the current status of a CRN.
 \`${DISCORD_PREFIX}list\`  or \`!list all\` to list all the classes you are tracking.
 \`${DISCORD_PREFIX}help\` to get a list of all commands available.
+\`${DISCORD_PREFIX}reset\` to stop tracking all classes.
 
 **EXAMPLES**
 \`${DISCORD_PREFIX}track CRN 30925\` to track CRN 30925.
@@ -49,10 +50,12 @@ export default {
         const embed = new MessageEmbed()
             .setColor("GREEN")
             .setTitle("Commands")
-            .setDescription(welcome_msg)
+            .setDescription(help_message)
             .setTimestamp();
         await message.author.send({
             embeds: [embed],
         });
     },
 };
+
+export { help_message };
