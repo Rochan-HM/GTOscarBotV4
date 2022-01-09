@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { Message, MessageComponentInteraction, MessageEmbed } from "discord.js";
 import { DiscordClient } from "../types";
+import { sendConfirmation } from "./helpers/sendConfirmation";
 
 const DISCORD_PREFIX = process.env.DISCORD_PREFIX;
 const help_message = `
@@ -31,19 +32,7 @@ export default {
         interaction: MessageComponentInteraction,
         client: DiscordClient
     ) {
-        await interaction.reply({
-            embeds: [
-                new MessageEmbed()
-                    .setColor("GREEN")
-                    .setTitle("Done")
-                    .setThumbnail(
-                        "https://media.giphy.com/media/tf9jjMcO77YzV4YPwE/giphy.gif"
-                    )
-                    .setDescription(`Please check your DM`)
-                    .setTimestamp(),
-            ],
-            ephemeral: true,
-        });
+        await sendConfirmation(interaction, undefined);
 
         const user = await client.users.fetch(interaction.member!.user.id);
 
@@ -58,18 +47,8 @@ export default {
         });
     },
     async execute(client: DiscordClient, message: Message, args: any) {
-        await message.reply({
-            embeds: [
-                new MessageEmbed()
-                    .setColor("GREEN")
-                    .setTitle("Done")
-                    .setThumbnail(
-                        "https://media.giphy.com/media/tf9jjMcO77YzV4YPwE/giphy.gif"
-                    )
-                    .setDescription(`${message.author} Please check your DM`)
-                    .setTimestamp(),
-            ],
-        });
+        await sendConfirmation(undefined, message);
+
         await message.delete();
 
         await message.author.send({
