@@ -1,8 +1,4 @@
-import {
-    ButtonInteraction,
-    Interaction,
-    MessageComponentInteraction,
-} from "discord.js";
+import { MessageComponentInteraction } from "discord.js";
 import { DiscordClient } from "../../types";
 
 export default {
