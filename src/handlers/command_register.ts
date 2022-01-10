@@ -23,18 +23,24 @@ export async function execute(client: DiscordClient) {
 
     (async () => {
         try {
-            console.log("Started refreshing application (/) commands.");
-
-            await rest.put(
-                // Routes.applicationCommands(process.env.BOT_CLIENT_ID!),
-                Routes.applicationGuildCommands(
-                    process.env.BOT_CLIENT_ID!,
-                    "826117242768195625"
-                ),
-                {
-                    body: commands,
-                }
-            );
+            if (process.env.NODE_ENV === "production") {
+                await rest.put(
+                    Routes.applicationCommands(process.env.BOT_CLIENT_ID!),
+                    {
+                        body: commands,
+                    }
+                );
+            } else {
+                await rest.put(
+                    Routes.applicationGuildCommands(
+                        process.env.BOT_CLIENT_ID!,
+                        "826117242768195625"
+                    ),
+                    {
+                        body: commands,
+                    }
+                );
+            }
 
             console.log("Successfully reloaded application (/) commands.");
         } catch (error) {
