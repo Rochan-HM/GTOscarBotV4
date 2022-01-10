@@ -1,7 +1,14 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Message, MessageComponentInteraction, MessageEmbed } from "discord.js";
+import {
+    CommandInteraction,
+    Message,
+    MessageComponentInteraction,
+    MessageEmbed,
+} from "discord.js";
 import prisma from "../database";
 import { DiscordClient } from "../types";
+import { sendConfirmation } from "./helpers/sendConfirmation";
+import { sendEmbed } from "./helpers/sendEmbed";
 
 export default {
     name: "status",
@@ -9,25 +16,82 @@ export default {
     description: "Get the current status of a class!",
     data: new SlashCommandBuilder()
         .setName("status")
-        .setDescription("Get the current status of a class!"),
+        .setDescription("Get the current status of a class!")
+        .addIntegerOption((option) =>
+            option
+                .setName("crn")
+                .setRequired(true)
+                .setDescription(
+                    "The CRN of the class you want to check the status of"
+                )
+                .setAutocomplete(false)
+                .setMinValue(0)
+                .setMaxValue(99999)
+        ),
     async execute_interaction(
-        interaction: MessageComponentInteraction,
+        interaction: CommandInteraction,
         client: DiscordClient
     ) {
-        await interaction.reply("To be implemented!");
+        await interaction.deferReply({ ephemeral: true });
+
+        try {
+            const crn = interaction.options.getInteger("crn");
+
+            if (!crn) {
+                throw new Error("CRN is required");
+            }
+
+            const course = await prisma.cRN.findFirst({
+                where: {
+                    crn_id: crn,
+                },
+                select: {
+                    class_name: true,
+                    class_seats: true,
+                    waitlist_seats: true,
+                },
+            });
+
+            if (!course) {
+                throw new Error("Invalid CRN");
+            }
+
+            const msg = `Status of CRN ${crn} - ${course.class_name}:
+
+            Class Seats: ${course.class_seats} ${
+                course.class_seats >= 1 ? "(Open)" : "(Closed)"
+            }
+            Waitlist Seats: ${course.waitlist_seats} ${
+                course.waitlist_seats >= 1 ? "(Open)" : "(Closed)"
+            }`;
+
+            await interaction.editReply({
+                embeds: [
+                    new MessageEmbed()
+                        .setColor("GREEN")
+                        .setTitle("Status")
+                        .setDescription(msg)
+                        .setTimestamp(),
+                ],
+                components: [],
+            });
+        } catch (e) {
+            await interaction.editReply({
+                embeds: [
+                    new MessageEmbed()
+                        .setColor("RED")
+                        .setTitle("Error")
+                        .setDescription(
+                            "Invalid Message Format or Class is not being tracked. Track it first to get current status!"
+                        )
+                        .setTimestamp(),
+                ],
+                components: [],
+            });
+        }
     },
     async execute(client: DiscordClient, message: Message, args: any) {
-        const done_embed = new MessageEmbed()
-            .setColor("GREEN")
-            .setTitle("Done")
-            .setThumbnail(
-                "https://media.giphy.com/media/tf9jjMcO77YzV4YPwE/giphy.gif"
-            )
-            .setDescription(`${message.author} Please check your DM`)
-            .setTimestamp();
-        await message.reply({
-            embeds: [done_embed],
-        });
+        await sendConfirmation({ message });
 
         try {
             const exp = /crn (\d+)/gi;
@@ -61,24 +125,26 @@ export default {
                 course.waitlist_seats >= 1 ? "(Open)" : "(Closed)"
             }`;
 
-            const embed = new MessageEmbed()
-                .setColor("GREEN")
-                .setTitle("Status")
-                .setDescription(msg)
-                .setTimestamp();
-            await message.author.send({
-                embeds: [embed],
+            await sendEmbed({
+                message,
+                embed: new MessageEmbed()
+                    .setColor("GREEN")
+                    .setTitle("Status")
+                    .setDescription(msg)
+                    .setTimestamp(),
+                client,
             });
         } catch (e) {
-            const embed = new MessageEmbed()
-                .setColor("RED")
-                .setTitle("Error")
-                .setDescription(
-                    "Invalid Message Format or Class is not being tracked. Track it first to get current status!"
-                )
-                .setTimestamp();
-            await message.author.send({
-                embeds: [embed],
+            await sendEmbed({
+                message,
+                embed: new MessageEmbed()
+                    .setColor("RED")
+                    .setTitle("Error")
+                    .setDescription(
+                        "Invalid Message Format or Class is not being tracked. Track it first to get current status!"
+                    )
+                    .setTimestamp(),
+                client,
             });
         } finally {
             await message.delete();

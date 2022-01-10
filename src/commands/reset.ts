@@ -1,8 +1,15 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Message, MessageComponentInteraction, MessageEmbed } from "discord.js";
+import {
+    CommandInteraction,
+    Message,
+    MessageActionRow,
+    MessageButton,
+    MessageEmbed,
+} from "discord.js";
 import prisma from "../database";
-import { scrape } from "../scraper";
 import { DiscordClient } from "../types";
+import { sendConfirmation } from "./helpers/sendConfirmation";
+import { sendEmbed } from "./helpers/sendEmbed";
 
 export default {
     name: "reset",
@@ -12,23 +19,85 @@ export default {
         .setName("reset")
         .setDescription("Reset to stop tracking all classes!"),
     async execute_interaction(
-        interaction: MessageComponentInteraction,
+        interaction: CommandInteraction,
         client: DiscordClient
     ) {
-        await interaction.reply("To be implemented!");
+        const confirmation = new MessageActionRow().addComponents(
+            new MessageButton()
+                .setCustomId("confirm")
+                .setLabel("Reset")
+                .setStyle("DANGER"),
+            new MessageButton()
+                .setCustomId("cancel")
+                .setLabel("Cancel")
+                .setStyle("SECONDARY")
+        );
+
+        await interaction.reply({
+            content: "Are you sure you want to reset and untrack all courses?",
+            components: [confirmation],
+            ephemeral: true,
+        });
+
+        const collector = interaction.channel?.createMessageComponentCollector({
+            max: 1,
+            time: 1000 * 15,
+        });
+
+        collector?.on("end", async (collection) => {
+            if (collection.first()?.customId === "confirm") {
+                try {
+                    const removedCourses = await prisma.userTracking.deleteMany(
+                        {
+                            where: {
+                                userId: interaction.member!.user.id,
+                            },
+                        }
+                    );
+
+                    await interaction.editReply({
+                        embeds: [
+                            new MessageEmbed()
+                                .setColor("GREEN")
+                                .setTitle("Reset")
+                                .setDescription(
+                                    `Successfully untracked ${removedCourses.count} course(s)`
+                                )
+                                .setTimestamp(),
+                        ],
+                        components: [],
+                    });
+                } catch (e) {
+                    console.error(`[Reset] Unable to reset.`);
+                    await interaction.editReply({
+                        embeds: [
+                            new MessageEmbed()
+                                .setColor("RED")
+                                .setTitle("Error")
+                                .setDescription(
+                                    "Sorry! Something went wrong! Please try again!"
+                                )
+                                .setTimestamp(),
+                        ],
+                        components: [],
+                    });
+                }
+            } else if (collection.first()?.customId === "cancel") {
+                await interaction.editReply({
+                    content: "Cancelled",
+                    components: [],
+                });
+                return;
+            } else {
+                await interaction.editReply({
+                    content: "Operation Expired! Please try again",
+                    components: [],
+                });
+            }
+        });
     },
     async execute(client: DiscordClient, message: Message, args: any) {
-        const done_embed = new MessageEmbed()
-            .setColor("GREEN")
-            .setTitle("Done")
-            .setThumbnail(
-                "https://media.giphy.com/media/tf9jjMcO77YzV4YPwE/giphy.gif"
-            )
-            .setDescription(`${message.author} Please check your DM`)
-            .setTimestamp();
-        await message.reply({
-            embeds: [done_embed],
-        });
+        await sendConfirmation({ message });
 
         try {
             // If admin message
@@ -54,29 +123,29 @@ export default {
                 },
             });
 
-            console.log(removedCourses);
-
-            const embed = new MessageEmbed()
-                .setColor("GREEN")
-                .setTitle("Track")
-                .setDescription(
-                    `Successfully untracked ${removedCourses.count} course(s)`
-                )
-                .setTimestamp();
-            await message.author.send({
-                embeds: [embed],
+            await sendEmbed({
+                message,
+                embed: new MessageEmbed()
+                    .setColor("GREEN")
+                    .setTitle("Reset")
+                    .setDescription(
+                        `Successfully untracked ${removedCourses.count} course(s)`
+                    )
+                    .setTimestamp(),
+                client,
             });
         } catch (err) {
-            console.error(`[reset.js] Unable to reset.`);
-            const embed = new MessageEmbed()
-                .setColor("RED")
-                .setTitle("Error")
-                .setDescription(
-                    "Sorry! Something went wrong! Please try again!"
-                )
-                .setTimestamp();
-            await message.author.send({
-                embeds: [embed],
+            console.error(`[Reset] Unable to reset.`);
+            await sendEmbed({
+                message,
+                embed: new MessageEmbed()
+                    .setColor("RED")
+                    .setTitle("Error")
+                    .setDescription(
+                        "Sorry! Something went wrong! Please try again!"
+                    )
+                    .setTimestamp(),
+                client,
             });
         } finally {
             await message.delete();

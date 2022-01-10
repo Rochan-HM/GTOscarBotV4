@@ -1,8 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Message, MessageComponentInteraction, MessageEmbed } from "discord.js";
+import { CommandInteraction, Message, MessageEmbed } from "discord.js";
 import prisma from "../database";
 import { scrape } from "../scraper";
 import { DiscordClient } from "../types";
+import { sendConfirmation } from "./helpers/sendConfirmation";
+import { sendEmbed } from "./helpers/sendEmbed";
 
 export default {
     name: "track",
@@ -10,25 +12,150 @@ export default {
     description: "Track a new class!",
     data: new SlashCommandBuilder()
         .setName("track")
-        .setDescription("Track a new class!"),
+        .setDescription("Track a new class!")
+        .addIntegerOption((option) =>
+            option
+                .setName("crn")
+                .setRequired(true)
+                .setDescription("The CRN of the class you want to track")
+                .setAutocomplete(false)
+                .setMinValue(0)
+                .setMaxValue(99999)
+        )
+        .addStringOption((option) =>
+            option
+                .setName("alias")
+                .setDescription(
+                    "Optionally, provide a custom name for the class"
+                )
+                .setRequired(false)
+        ),
     async execute_interaction(
-        interaction: MessageComponentInteraction,
+        interaction: CommandInteraction,
         client: DiscordClient
     ) {
-        await interaction.reply("To be implemented!");
+        await interaction.deferReply({ ephemeral: true });
+
+        try {
+            const crn = interaction.options.getInteger("crn");
+            const userId = interaction.member?.user.id!;
+            const userName = interaction.member?.user.username!;
+
+            if (!crn) {
+                throw new Error("CRN is required");
+            }
+
+            const {
+                class_seats: c_seats,
+                wl_seats: w_seats,
+                og_name: c_name,
+            } = await scrape(crn);
+            if (!c_seats || !w_seats || !c_name) {
+                console.log(
+                    `[database] Error adding CRN ${crn} -> Got ${c_seats} Class | ${w_seats} Waitlist`
+                );
+                throw new Error("Invalid CRN or OSCAR Error!");
+            }
+            const class_seats = +c_seats;
+            const wl_seats = +w_seats;
+
+            // Update alias
+            const alias = interaction.options.getString("alias") || c_name;
+
+            const user = await prisma.user.upsert({
+                where: {
+                    id: userId,
+                },
+                create: {
+                    id: userId,
+                    name: userName,
+                    total_tracked_crns: 0,
+                },
+                update: {
+                    name: userName,
+                },
+            });
+
+            const course = await prisma.userTracking.findFirst({
+                where: {
+                    userId: user.id,
+                    crnId: crn,
+                },
+            });
+
+            if (course) {
+                throw new Error("Class is already being tracked!");
+            }
+
+            await prisma.$transaction([
+                prisma.userTracking.create({
+                    data: {
+                        class_alias: alias,
+                        guild_id: interaction.guildId || "Unknown",
+                        guild_name: interaction.guild?.name || "Unknown",
+                        CRN: {
+                            connectOrCreate: {
+                                where: {
+                                    crn_id: crn,
+                                },
+                                create: {
+                                    crn_id: crn,
+                                    class_name: c_name,
+                                    class_seats,
+                                    waitlist_seats: wl_seats,
+                                },
+                            },
+                        },
+                        User: {
+                            connect: {
+                                id: user.id,
+                            },
+                        },
+                    },
+                }),
+                prisma.user.update({
+                    data: {
+                        total_tracked_crns: {
+                            increment: 1,
+                        },
+                    },
+                    where: {
+                        id: user.id,
+                    },
+                }),
+            ]);
+
+            await interaction.editReply({
+                embeds: [
+                    new MessageEmbed()
+                        .setColor("GREEN")
+                        .setTitle("Track")
+                        .setDescription(
+                            `Successfully tracking ${alias}: CRN ${crn}
+                
+                **Status:**
+                Class Seats: ${class_seats}
+                Waitlist Seats: ${wl_seats}
+                `
+                        )
+                        .setTimestamp(),
+                ],
+            });
+        } catch (err) {
+            console.error(`[Track] Unable to track class. Error ${err}`);
+            await interaction.editReply({
+                embeds: [
+                    new MessageEmbed()
+                        .setColor("RED")
+                        .setTitle("Error")
+                        .setDescription(err.message)
+                        .setTimestamp(),
+                ],
+            });
+        }
     },
     async execute(client: DiscordClient, message: Message, args: any) {
-        const done_embed = new MessageEmbed()
-            .setColor("GREEN")
-            .setTitle("Done")
-            .setThumbnail(
-                "https://media.giphy.com/media/tf9jjMcO77YzV4YPwE/giphy.gif"
-            )
-            .setDescription(`${message.author} Please check your DM`)
-            .setTimestamp();
-        await message.reply({
-            embeds: [done_embed],
-        });
+        await sendConfirmation({ message });
 
         try {
             // If admin message
@@ -147,30 +274,32 @@ export default {
                 }),
             ]);
 
-            const embed = new MessageEmbed()
-                .setColor("GREEN")
-                .setTitle("Track")
-                .setDescription(
-                    `Successfully tracking ${alias}: CRN ${crn}
+            await sendEmbed({
+                message,
+                client,
+                embed: new MessageEmbed()
+                    .setColor("GREEN")
+                    .setTitle("Track")
+                    .setDescription(
+                        `Successfully tracking ${alias}: CRN ${crn}
                 
                 **Status:**
                 Class Seats: ${class_seats}
                 Waitlist Seats: ${wl_seats}
                 `
-                )
-                .setTimestamp();
-            await message.author.send({
-                embeds: [embed],
+                    )
+                    .setTimestamp(),
             });
         } catch (err) {
-            console.error(`[track.js] Unable to track class. Error ${err}`);
-            const embed = new MessageEmbed()
-                .setColor("RED")
-                .setTitle("Error")
-                .setDescription(err.message)
-                .setTimestamp();
-            await message.author.send({
-                embeds: [embed],
+            console.error(`[Track] Unable to track class. Error ${err}`);
+            await sendEmbed({
+                message,
+                client,
+                embed: new MessageEmbed()
+                    .setColor("RED")
+                    .setTitle("Error")
+                    .setDescription(err.message)
+                    .setTimestamp(),
             });
         } finally {
             await message.delete();

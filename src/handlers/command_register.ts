@@ -14,7 +14,9 @@ export async function execute(client: DiscordClient) {
         let command = await import(
             path.resolve(__dirname, "..", "commands", file)
         );
-        commands.push(command.default.data.toJSON());
+        if (command.default.data) {
+            commands.push(command.default.data.toJSON());
+        }
     }
 
     const rest = new REST().setToken(process.env.DISCORD_TOKEN!);

@@ -1,7 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Message, MessageComponentInteraction, MessageEmbed } from "discord.js";
+import { CommandInteraction, Message, MessageEmbed } from "discord.js";
 import { DiscordClient } from "../types";
 import { sendConfirmation } from "./helpers/sendConfirmation";
+import { sendEmbed } from "./helpers/sendEmbed";
 
 const DISCORD_PREFIX = process.env.DISCORD_PREFIX;
 const help_message = `
@@ -29,14 +30,10 @@ export default {
         .setName("help")
         .setDescription("Shows the Bot Usage Instructions!"),
     async execute_interaction(
-        interaction: MessageComponentInteraction,
+        interaction: CommandInteraction,
         client: DiscordClient
     ) {
-        await sendConfirmation(interaction);
-
-        const user = await client.users.fetch(interaction.member!.user.id);
-
-        await user.send({
+        await interaction.reply({
             embeds: [
                 new MessageEmbed()
                     .setColor("GREEN")
@@ -44,21 +41,22 @@ export default {
                     .setDescription(help_message)
                     .setTimestamp(),
             ],
+            ephemeral: true,
         });
     },
     async execute(client: DiscordClient, message: Message, args: any) {
-        await sendConfirmation(message);
+        await sendConfirmation({ message });
 
         await message.delete();
 
-        await message.author.send({
-            embeds: [
-                new MessageEmbed()
-                    .setColor("GREEN")
-                    .setTitle("Commands")
-                    .setDescription(help_message)
-                    .setTimestamp(),
-            ],
+        await sendEmbed({
+            message,
+            embed: new MessageEmbed()
+                .setColor("GREEN")
+                .setTitle("Commands")
+                .setDescription(help_message)
+                .setTimestamp(),
+            client,
         });
     },
 };

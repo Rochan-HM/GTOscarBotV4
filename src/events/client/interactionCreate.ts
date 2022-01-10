@@ -1,13 +1,19 @@
-import { Interaction } from "discord.js";
+import {
+    ButtonInteraction,
+    Interaction,
+    MessageComponentInteraction,
+} from "discord.js";
 import { DiscordClient } from "../../types";
 
 export default {
     name: "interactionCreate",
-    async execute(interaction: Interaction, client: DiscordClient) {
+    async execute(
+        interaction: MessageComponentInteraction,
+        client: DiscordClient
+    ) {
         if (!interaction.isCommand()) return;
 
-        const command = client.commands.get(interaction.commandName);
-        console.log(command);
+        const command = client.commands.get(interaction.commandName!);
 
         if (!command) return;
 
