@@ -13,7 +13,7 @@ import { sendEmbed } from "./helpers/sendEmbed";
 
 export default {
     name: "reset",
-    aliases: [],
+    aliases: ["format"],
     description: "Reset to stop tracking all classes!",
     data: new SlashCommandBuilder()
         .setName("reset")

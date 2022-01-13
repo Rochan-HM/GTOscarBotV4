@@ -7,7 +7,7 @@ import { sendEmbed } from "./helpers/sendEmbed";
 
 export default {
     name: "untrack",
-    aliases: ["untracking", "untracked", "untracks"],
+    aliases: [],
     description: "Stop tracking a particular class!",
     data: new SlashCommandBuilder()
         .setName("untrack")

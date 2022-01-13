@@ -7,7 +7,7 @@ import { sendEmbed } from "./helpers/sendEmbed";
 
 export default {
     name: "list",
-    aliases: ["listing", "lists", "listed"],
+    aliases: [],
     description: "Get the current status of a class!",
     data: new SlashCommandBuilder()
         .setName("list")
@@ -119,10 +119,16 @@ export default {
                     break;
             }
 
-            let msg = "Courses \n";
-            for (const crn of crns) {
-                msg += `${crn.crnId}: ${crn.class_alias}\n`;
+            let msg;
+            if (crns.length === 0) {
+                msg = "No courses meet your criteria!";
+            } else {
+                msg = `${crns.length} Courses \n`;
+                for (const crn of crns) {
+                    msg += `${crn.crnId}: ${crn.class_alias}\n`;
+                }
             }
+
             await interaction.editReply({
                 embeds: [
                     new MessageEmbed()

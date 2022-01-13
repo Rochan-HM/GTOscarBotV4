@@ -12,7 +12,7 @@ import { sendEmbed } from "./helpers/sendEmbed";
 
 export default {
     name: "status",
-    aliases: ["statusing"],
+    aliases: [],
     description: "Get the current status of a class!",
     data: new SlashCommandBuilder()
         .setName("status")
@@ -44,6 +44,11 @@ export default {
             const course = await prisma.cRN.findFirst({
                 where: {
                     crn_id: crn,
+                    UserTracking: {
+                        every: {
+                            userId: interaction.member?.user.id,
+                        },
+                    },
                 },
                 select: {
                     class_name: true,

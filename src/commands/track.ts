@@ -8,7 +8,7 @@ import { sendEmbed } from "./helpers/sendEmbed";
 
 export default {
     name: "track",
-    aliases: ["tracking", "tracks", "tracked"],
+    aliases: [],
     description: "Track a new class!",
     data: new SlashCommandBuilder()
         .setName("track")
