@@ -125,7 +125,7 @@ process.on("message", async (msg: string) => {
             }
             // If previous status was open and now it is closed
             else if (prev_class_status === "o" && curr_class_status === "c") {
-                sendMessage(true, "Class Closed Notice!", crn);
+                sendMessage(true, "Class Closure Notice!", crn);
             }
         }
 
