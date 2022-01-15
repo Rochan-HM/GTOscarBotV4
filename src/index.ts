@@ -26,6 +26,8 @@ for (const env of envs) {
     }
 }
 
+const PAUSED = +process.env.PAUSED!;
+
 const client = new Client({
     intents: [
         "GUILDS",
@@ -53,7 +55,7 @@ client.events = new Collection();
 
 client.login(process.env.DISCORD_TOKEN!);
 
-if (!process.env.isPaused!) {
+if (!PAUSED) {
     // Start cleaner daemon
     cleaner();
 
@@ -70,4 +72,6 @@ if (!process.env.isPaused!) {
             notifier(client, message, crn);
         }
     });
+} else {
+    console.log("Tracker is paused");
 }
