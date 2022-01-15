@@ -51,8 +51,6 @@ export default {
     async execute(client: DiscordClient, message: Message, args: any) {
         await sendConfirmation({ message });
 
-        await message.delete();
-
         await sendEmbed({
             message,
             embed: new MessageEmbed()
@@ -62,6 +60,8 @@ export default {
                 .setTimestamp(),
             client,
         });
+
+        await message.delete();
     },
 };
 
