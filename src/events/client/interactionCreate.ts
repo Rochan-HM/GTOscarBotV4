@@ -9,7 +9,7 @@ export default {
     ) {
         if (!interaction.isCommand()) return;
 
-        if (interaction.channel?.type === "DM") {
+        if (!interaction.guild) {
             await interaction.reply({
                 embeds: [
                     new MessageEmbed()
