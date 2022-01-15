@@ -16,7 +16,12 @@ export async function sendConfirmation({
                     .setThumbnail(
                         "https://media.giphy.com/media/tf9jjMcO77YzV4YPwE/giphy.gif"
                     )
-                    .setDescription(`${message.author} Please check your DM`)
+                    .setDescription(
+                        `${message.author} Please check your DM
+                    
+                    **Update:** Please use **Slash** \`/\` commands for ClassBot.
+                    `
+                    )
                     .setTimestamp(),
             ],
         });
