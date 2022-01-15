@@ -6,6 +6,10 @@ import { sendEmbed } from "./helpers/sendEmbed";
 
 const DISCORD_PREFIX = process.env.DISCORD_PREFIX;
 const help_message = `
+**Updated**:
+Please use \'Slash\' commands to interact with the bot.
+Type in \'/\' to see the list of commands.
+
 **BOT COMMANDS**
 \`${DISCORD_PREFIX}track CRN xxxxx\` to track a specific CRN.
 \`${DISCORD_PREFIX}track CRN xxxxx as Class Name\` to track a specific CRN along with an identifier.
