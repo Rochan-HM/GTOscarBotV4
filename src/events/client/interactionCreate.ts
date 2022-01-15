@@ -1,4 +1,4 @@
-import { MessageComponentInteraction } from "discord.js";
+import { MessageComponentInteraction, MessageEmbed } from "discord.js";
 import { DiscordClient } from "../../types";
 
 export default {
@@ -8,6 +8,24 @@ export default {
         client: DiscordClient
     ) {
         if (!interaction.isCommand()) return;
+
+        if (interaction.channel?.type === "DM") {
+            await interaction.reply({
+                embeds: [
+                    new MessageEmbed()
+                        .setColor("RED")
+                        .setTitle("Sorry!")
+                        .setImage(
+                            "https://media.giphy.com/media/YuqLrVVVoDK7gqb1Vw/giphy.gif"
+                        )
+                        .setDescription(
+                            "I cannot reply to Personal Messages. Please use the command in the server!"
+                        )
+                        .setTimestamp(),
+                ],
+            });
+            return;
+        }
 
         const command = client.commands.get(interaction.commandName!);
 
