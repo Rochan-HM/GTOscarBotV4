@@ -1,10 +1,11 @@
 import { Client, Collection, Partials } from "discord.js";
 import { fork } from "child_process";
-import notifier from "./notifier";
-import { DiscordClient, Message } from "./types";
 import path from "path";
 import dotenv from "dotenv";
+import * as timer from "node:timers/promises";
 
+import { DiscordClient, Message } from "./types";
+import notifier from "./notifier";
 import cleaner from "./cleaner";
 
 dotenv.config();
@@ -64,26 +65,33 @@ const main = async () => {
         process.exit(1);
     }
 
-    if (!PAUSED) {
-        // Start cleaner daemon
-        cleaner();
-
-        // Start OSCAR daemon
-        const worker = fork(path.resolve(__dirname, "worker"));
-        console.log("Launching worker child fork");
-        worker.send("start");
-        worker.on("message", (msg: Message) => {
-            const { update, message, crn } = msg;
-            if (!update) {
-                console.log(`${message} => Relaunching worker child fork...`);
-                worker.send("start");
-            } else {
-                notifier(client, message, crn);
-            }
-        });
-    } else {
+    if (PAUSED) {
         console.log("Tracker is paused");
+        return;
     }
+
+    // Start cleaner daemon
+    cleaner();
+
+    // Start OSCAR daemon
+    const worker = fork(path.resolve(__dirname, "worker"));
+    console.log("Launching worker child fork");
+
+    // Get the sleep time between successive fetches
+    const SLEEP_TIME = +process.env.SLEEP_TIME!;
+    const sleep = (ms: number) => timer.setTimeout(ms);
+
+    worker.send("start");
+    worker.on("message", async (msg: Message) => {
+        const { update, message, crn } = msg;
+        if (!update) {
+            await sleep(SLEEP_TIME);
+            console.log(`${message} => Relaunching worker child fork...`);
+            worker.send("start");
+        } else {
+            notifier(client, message, crn);
+        }
+    });
 };
 
 main();

@@ -3,8 +3,6 @@ import { parse } from "./scraper";
 import axios from "axios";
 import throat from "throat";
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
 const checkFalsy = (arg: any) => arg !== null && arg !== undefined;
 
 const sendMessage = (update: boolean, message: string, crn: number = -1) => {
@@ -15,7 +13,6 @@ const sendMessage = (update: boolean, message: string, crn: number = -1) => {
     });
 };
 
-const SLEEP_TIME = +process.env.SLEEP_TIME!;
 const OSCAR_URL = process.env.OSCAR_URL!;
 const CONCURRENCY = +process.env.CONCURRENCY!;
 
@@ -36,7 +33,6 @@ process.on("message", async (msg: string) => {
     }
 
     if (previous.length === 0) {
-        await sleep(SLEEP_TIME);
         sendMessage(false, "Empty");
         return;
     }
@@ -56,7 +52,6 @@ process.on("message", async (msg: string) => {
         response = await Promise.all(request);
     } catch (e) {
         console.error(`[Worker] OSCAR Fetch Error -> ${e}`);
-        await sleep(SLEEP_TIME);
         sendMessage(false, "Oscar Fetcher Error");
         return;
     }
@@ -71,7 +66,6 @@ process.on("message", async (msg: string) => {
 
         if (!c_seats && !w_seats && !c_name) {
             console.error(`[Worker] OSCAR Fetch Error -> Skipping CRN ${crn}`);
-            await sleep(SLEEP_TIME);
             continue;
         }
         console.log(
@@ -184,6 +178,5 @@ process.on("message", async (msg: string) => {
         }
     }
 
-    await sleep(SLEEP_TIME);
     sendMessage(false, "Success");
 });
