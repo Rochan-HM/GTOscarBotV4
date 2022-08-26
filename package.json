@@ -12,7 +12,7 @@
         "prisma": "prisma",
         "build": "del-cli build/ && tsc",
         "deploy": "npm run build && npm run start",
-        "postinstall": "npm run prisma generate && npm prisma migrate deploy && npm run build"
+        "postinstall": "npm run prisma generate && npm run prisma migrate deploy && npm run build"
     },
     "devDependencies": {
         "@types/node-cron": "^3.0.2",
