@@ -39,6 +39,7 @@ const main = async () => {
             "GuildPresences",
             "GuildMessages",
             "GuildMessageTyping",
+            "MessageContent",
             "GuildEmojisAndStickers",
             "DirectMessages",
             "DirectMessageTyping",
