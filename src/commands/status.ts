@@ -1,10 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import {
-    CommandInteraction,
-    Message,
-    MessageComponentInteraction,
-    MessageEmbed,
-} from "discord.js";
+import { ChatInputCommandInteraction, Message, EmbedBuilder } from "discord.js";
 import prisma from "../database";
 import { DiscordClient } from "../types";
 import { sendConfirmation } from "./helpers/sendConfirmation";
@@ -29,7 +24,7 @@ export default {
                 .setMaxValue(99999)
         ),
     async execute_interaction(
-        interaction: CommandInteraction,
+        interaction: ChatInputCommandInteraction,
         client: DiscordClient
     ) {
         await interaction.deferReply({ ephemeral: true });
@@ -72,8 +67,8 @@ export default {
 
             await interaction.editReply({
                 embeds: [
-                    new MessageEmbed()
-                        .setColor("GREEN")
+                    new EmbedBuilder()
+                        .setColor("Green")
                         .setTitle("Status")
                         .setDescription(msg)
                         .setTimestamp(),
@@ -83,8 +78,8 @@ export default {
         } catch (e) {
             await interaction.editReply({
                 embeds: [
-                    new MessageEmbed()
-                        .setColor("RED")
+                    new EmbedBuilder()
+                        .setColor("Red")
                         .setTitle("Error")
                         .setDescription(
                             "Invalid Message Format or Class is not being tracked. Track it first to get current status!"
@@ -132,8 +127,8 @@ export default {
 
             await sendEmbed({
                 message,
-                embed: new MessageEmbed()
-                    .setColor("GREEN")
+                embed: new EmbedBuilder()
+                    .setColor("Green")
                     .setTitle("Status")
                     .setDescription(msg)
                     .setTimestamp(),
@@ -142,8 +137,8 @@ export default {
         } catch (e) {
             await sendEmbed({
                 message,
-                embed: new MessageEmbed()
-                    .setColor("RED")
+                embed: new EmbedBuilder()
+                    .setColor("Red")
                     .setTitle("Error")
                     .setDescription(
                         "Invalid Message Format or Class is not being tracked. Track it first to get current status!"

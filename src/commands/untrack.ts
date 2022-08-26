@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, Message, MessageEmbed } from "discord.js";
+import { ChatInputCommandInteraction, Message, EmbedBuilder } from "discord.js";
 import prisma from "../database";
 import { DiscordClient } from "../types";
 import { sendConfirmation } from "./helpers/sendConfirmation";
@@ -22,7 +22,7 @@ export default {
                 .setMaxValue(99999)
         ),
     async execute_interaction(
-        interaction: CommandInteraction,
+        interaction: ChatInputCommandInteraction,
         client: DiscordClient
     ) {
         await interaction.deferReply({ ephemeral: true });
@@ -57,8 +57,8 @@ export default {
 
             await interaction.editReply({
                 embeds: [
-                    new MessageEmbed()
-                        .setColor("GREEN")
+                    new EmbedBuilder()
+                        .setColor("Green")
                         .setTitle("Untrack")
                         .setDescription(`Stopped tracking CRN ${crn}!`)
                         .setTimestamp(),
@@ -67,8 +67,8 @@ export default {
         } catch (e) {
             await interaction.editReply({
                 embeds: [
-                    new MessageEmbed()
-                        .setColor("RED")
+                    new EmbedBuilder()
+                        .setColor("Red")
                         .setTitle("Error")
                         .setDescription(e.message)
                         .setTimestamp(),
@@ -132,8 +132,8 @@ export default {
             await sendEmbed({
                 message,
                 client,
-                embed: new MessageEmbed()
-                    .setColor("GREEN")
+                embed: new EmbedBuilder()
+                    .setColor("Green")
                     .setTitle("Untrack")
                     .setDescription(`Stopped tracking CRN ${crn}!`)
                     .setTimestamp(),
@@ -142,8 +142,8 @@ export default {
             await sendEmbed({
                 message,
                 client,
-                embed: new MessageEmbed()
-                    .setColor("RED")
+                embed: new EmbedBuilder()
+                    .setColor("Red")
                     .setTitle("Error")
                     .setDescription(e.message)
                     .setTimestamp(),

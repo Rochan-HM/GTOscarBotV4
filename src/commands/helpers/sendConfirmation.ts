@@ -1,4 +1,4 @@
-import { MessageComponentInteraction, MessageEmbed, Message } from "discord.js";
+import { MessageComponentInteraction, EmbedBuilder, Message } from "discord.js";
 
 export async function sendConfirmation({
     message,
@@ -10,8 +10,8 @@ export async function sendConfirmation({
     if (message) {
         await message.reply({
             embeds: [
-                new MessageEmbed()
-                    .setColor("GREEN")
+                new EmbedBuilder()
+                    .setColor("Green")
                     .setTitle("Done")
                     .setThumbnail(
                         "https://media.giphy.com/media/tf9jjMcO77YzV4YPwE/giphy.gif"
@@ -30,8 +30,8 @@ export async function sendConfirmation({
         console.log("In interaction reply");
         await interaction.reply({
             embeds: [
-                new MessageEmbed()
-                    .setColor("GREEN")
+                new EmbedBuilder()
+                    .setColor("Green")
                     .setTitle("Done")
                     .setThumbnail(
                         "https://media.giphy.com/media/tf9jjMcO77YzV4YPwE/giphy.gif"

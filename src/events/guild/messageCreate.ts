@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from "discord.js";
+import { Message, EmbedBuilder, ChannelType } from "discord.js";
 import { DiscordClient } from "../../types";
 
 const DISCORD_PREFIX = process.env.DISCORD_PREFIX!;
@@ -6,9 +6,9 @@ const DISCORD_PREFIX = process.env.DISCORD_PREFIX!;
 export default {
     name: "message",
     async execute(message: Message, client: DiscordClient) {
-        if (message.channel.type === "DM" && !message.author.bot) {
-            const embed = new MessageEmbed()
-                .setColor("RED")
+        if (message.channel.type === ChannelType.DM && !message.author.bot) {
+            const embed = new EmbedBuilder()
+                .setColor("Red")
                 .setTitle("Sorry!")
                 .setImage(
                     "https://media.giphy.com/media/YuqLrVVVoDK7gqb1Vw/giphy.gif"
@@ -40,8 +40,8 @@ export default {
             );
 
         if (!command) {
-            const done_embed = new MessageEmbed()
-                .setColor("RED")
+            const done_embed = new EmbedBuilder()
+                .setColor("Red")
                 .setTitle("Invalid Command")
                 .setThumbnail(
                     "https://media.giphy.com/media/YuqLrVVVoDK7gqb1Vw/giphy.gif"

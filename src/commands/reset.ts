@@ -1,10 +1,11 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import {
-    CommandInteraction,
+    ChatInputCommandInteraction,
     Message,
-    MessageActionRow,
-    MessageButton,
-    MessageEmbed,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    EmbedBuilder,
 } from "discord.js";
 import prisma from "../database";
 import { DiscordClient } from "../types";
@@ -19,19 +20,20 @@ export default {
         .setName("reset")
         .setDescription("Reset to stop tracking all classes!"),
     async execute_interaction(
-        interaction: CommandInteraction,
+        interaction: ChatInputCommandInteraction,
         client: DiscordClient
     ) {
-        const confirmation = new MessageActionRow().addComponents(
-            new MessageButton()
-                .setCustomId("confirm")
-                .setLabel("Reset")
-                .setStyle("DANGER"),
-            new MessageButton()
-                .setCustomId("cancel")
-                .setLabel("Cancel")
-                .setStyle("SECONDARY")
-        );
+        const confirmation =
+            new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                    .setCustomId("confirm")
+                    .setLabel("Reset")
+                    .setStyle(ButtonStyle.Danger),
+                new ButtonBuilder()
+                    .setCustomId("cancel")
+                    .setLabel("Cancel")
+                    .setStyle(ButtonStyle.Secondary)
+            );
 
         await interaction.reply({
             content: "Are you sure you want to reset and untrack all courses?",
@@ -57,8 +59,8 @@ export default {
 
                     await interaction.editReply({
                         embeds: [
-                            new MessageEmbed()
-                                .setColor("GREEN")
+                            new EmbedBuilder()
+                                .setColor("Green")
                                 .setTitle("Reset")
                                 .setDescription(
                                     `Successfully untracked ${removedCourses.count} course(s)`
@@ -71,8 +73,8 @@ export default {
                     console.error(`[Reset] Unable to reset.`);
                     await interaction.editReply({
                         embeds: [
-                            new MessageEmbed()
-                                .setColor("RED")
+                            new EmbedBuilder()
+                                .setColor("Red")
                                 .setTitle("Error")
                                 .setDescription(
                                     "Sorry! Something went wrong! Please try again!"
@@ -125,8 +127,8 @@ export default {
 
             await sendEmbed({
                 message,
-                embed: new MessageEmbed()
-                    .setColor("GREEN")
+                embed: new EmbedBuilder()
+                    .setColor("Green")
                     .setTitle("Reset")
                     .setDescription(
                         `Successfully untracked ${removedCourses.count} course(s)`
@@ -138,8 +140,8 @@ export default {
             console.error(`[Reset] Unable to reset.`);
             await sendEmbed({
                 message,
-                embed: new MessageEmbed()
-                    .setColor("RED")
+                embed: new EmbedBuilder()
+                    .setColor("Red")
                     .setTitle("Error")
                     .setDescription(
                         "Sorry! Something went wrong! Please try again!"

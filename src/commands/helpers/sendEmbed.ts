@@ -1,4 +1,4 @@
-import { MessageComponentInteraction, MessageEmbed, Message } from "discord.js";
+import { MessageComponentInteraction, EmbedBuilder, Message } from "discord.js";
 import { DiscordClient } from "../../types";
 
 export async function sendEmbed({
@@ -9,7 +9,7 @@ export async function sendEmbed({
 }: {
     message?: Message;
     interaction?: MessageComponentInteraction;
-    embed: MessageEmbed;
+    embed: EmbedBuilder;
     client: DiscordClient;
 }) {
     if (message) {

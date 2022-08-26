@@ -1,10 +1,10 @@
-import { MessageComponentInteraction, MessageEmbed } from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import { DiscordClient } from "../../types";
 
 export default {
     name: "interactionCreate",
     async execute(
-        interaction: MessageComponentInteraction,
+        interaction: ChatInputCommandInteraction,
         client: DiscordClient
     ) {
         if (!interaction.isCommand()) return;
@@ -12,8 +12,8 @@ export default {
         if (!interaction.guild) {
             await interaction.reply({
                 embeds: [
-                    new MessageEmbed()
-                        .setColor("RED")
+                    new EmbedBuilder()
+                        .setColor("Red")
                         .setTitle("Sorry!")
                         .setImage(
                             "https://media.giphy.com/media/YuqLrVVVoDK7gqb1Vw/giphy.gif"

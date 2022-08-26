@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, Message, MessageEmbed } from "discord.js";
+import { ChatInputCommandInteraction, Message, EmbedBuilder } from "discord.js";
 import prisma from "../database";
 import { scrape } from "../scraper";
 import { DiscordClient } from "../types";
@@ -31,7 +31,7 @@ export default {
                 .setRequired(false)
         ),
     async execute_interaction(
-        interaction: CommandInteraction,
+        interaction: ChatInputCommandInteraction,
         client: DiscordClient
     ) {
         await interaction.deferReply({ ephemeral: true });
@@ -127,8 +127,8 @@ export default {
 
             await interaction.editReply({
                 embeds: [
-                    new MessageEmbed()
-                        .setColor("GREEN")
+                    new EmbedBuilder()
+                        .setColor("Green")
                         .setTitle("Track")
                         .setDescription(
                             `Successfully tracking ${alias}: CRN ${crn}
@@ -145,8 +145,8 @@ export default {
             console.error(`[Track] Unable to track class. Error ${err}`);
             await interaction.editReply({
                 embeds: [
-                    new MessageEmbed()
-                        .setColor("RED")
+                    new EmbedBuilder()
+                        .setColor("Red")
                         .setTitle("Error")
                         .setDescription(err.message)
                         .setTimestamp(),
@@ -277,8 +277,8 @@ export default {
             await sendEmbed({
                 message,
                 client,
-                embed: new MessageEmbed()
-                    .setColor("GREEN")
+                embed: new EmbedBuilder()
+                    .setColor("Green")
                     .setTitle("Track")
                     .setDescription(
                         `Successfully tracking ${alias}: CRN ${crn}
@@ -295,8 +295,8 @@ export default {
             await sendEmbed({
                 message,
                 client,
-                embed: new MessageEmbed()
-                    .setColor("RED")
+                embed: new EmbedBuilder()
+                    .setColor("Red")
                     .setTitle("Error")
                     .setDescription(err.message)
                     .setTimestamp(),

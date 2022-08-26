@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, Message, MessageEmbed } from "discord.js";
+import { ChatInputCommandInteraction, Message, EmbedBuilder } from "discord.js";
 import { DiscordClient } from "../types";
 import { sendConfirmation } from "./helpers/sendConfirmation";
 import { sendEmbed } from "./helpers/sendEmbed";
@@ -34,13 +34,13 @@ export default {
         .setName("help")
         .setDescription("Shows the Bot Usage Instructions!"),
     async execute_interaction(
-        interaction: CommandInteraction,
+        interaction: ChatInputCommandInteraction,
         client: DiscordClient
     ) {
         await interaction.reply({
             embeds: [
-                new MessageEmbed()
-                    .setColor("GREEN")
+                new EmbedBuilder()
+                    .setColor("Green")
                     .setTitle("Commands")
                     .setDescription(help_message)
                     .setTimestamp(),
@@ -53,8 +53,8 @@ export default {
 
         await sendEmbed({
             message,
-            embed: new MessageEmbed()
-                .setColor("GREEN")
+            embed: new EmbedBuilder()
+                .setColor("Green")
                 .setTitle("Commands")
                 .setDescription(help_message)
                 .setTimestamp(),

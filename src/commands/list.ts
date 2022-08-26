@@ -1,4 +1,4 @@
-import { CommandInteraction, Message, MessageEmbed } from "discord.js";
+import { Message, EmbedBuilder, ChatInputCommandInteraction } from "discord.js";
 import { DiscordClient } from "../types";
 import prisma from "../database";
 import { SlashCommandBuilder } from "@discordjs/builders";
@@ -17,21 +17,25 @@ export default {
                 .setName("filter")
                 .setDescription("Filter classes by")
                 .setRequired(true)
-                .addChoice("All Courses", "all")
-                .addChoice("Open Courses", "open")
-                .addChoice("Closed Courses", "closed")
-                .addChoice("Waitlist Open Courses", "waitlist open")
-                .addChoice("Waitlist Closed Courses", "waitlist closed")
+                .addChoices(
+                    { name: "All Courses", value: "all" },
+                    { name: "Open Courses", value: "open" },
+                    { name: "Closed Courses", value: "closed" },
+                    { name: "Waitlist Open Courses", value: "waitlist open" },
+                    {
+                        name: "Waitlist Closed Courses",
+                        value: "waitlist closed",
+                    }
+                )
         ),
     async execute_interaction(
-        interaction: CommandInteraction,
+        interaction: ChatInputCommandInteraction,
         client: DiscordClient
     ) {
         await interaction.deferReply({ ephemeral: true });
 
         try {
             let filter = interaction.options.getString("filter");
-            interaction.options.getString;
             if (!filter) {
                 filter = "all";
             }
@@ -131,8 +135,8 @@ export default {
 
             await interaction.editReply({
                 embeds: [
-                    new MessageEmbed()
-                        .setColor("GREEN")
+                    new EmbedBuilder()
+                        .setColor("Green")
                         .setTitle("List")
                         .setDescription(msg)
                         .setTimestamp(),
@@ -141,8 +145,8 @@ export default {
         } catch (e) {
             await interaction.editReply({
                 embeds: [
-                    new MessageEmbed()
-                        .setColor("RED")
+                    new EmbedBuilder()
+                        .setColor("Red")
                         .setTitle("Error")
                         .setDescription("Invalid Message Format!")
                         .setTimestamp(),
@@ -170,8 +174,8 @@ export default {
             }
             await sendEmbed({
                 message,
-                embed: new MessageEmbed()
-                    .setColor("GREEN")
+                embed: new EmbedBuilder()
+                    .setColor("Green")
                     .setTitle("List")
                     .setDescription(msg)
                     .setTimestamp(),
@@ -180,8 +184,8 @@ export default {
         } catch (e) {
             await sendEmbed({
                 message,
-                embed: new MessageEmbed()
-                    .setColor("RED")
+                embed: new EmbedBuilder()
+                    .setColor("Red")
                     .setTitle("Error")
                     .setDescription(
                         "Invalid Message Format or No Class are being tracked!"

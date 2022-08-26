@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { Message, MessageEmbed } from "discord.js";
+import { Message, EmbedBuilder } from "discord.js";
 import { DiscordClient } from "../types";
 
 export default {
@@ -7,7 +6,7 @@ export default {
     aliases: ["latency"],
     description: "Checks the Bot and API Latency!",
     async execute(client: DiscordClient, message: Message, args: any) {
-        const embed = new MessageEmbed().setColor("GREEN").setTitle("Ping");
+        const embed = new EmbedBuilder().setColor("Green").setTitle("Ping");
         const msg = await message.channel.send("Loading data...🤔");
         await msg.delete();
         const latency = `🏓Latency is ${

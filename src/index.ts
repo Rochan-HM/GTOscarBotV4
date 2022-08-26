@@ -1,4 +1,4 @@
-import { Client, Collection } from "discord.js";
+import { Client, Collection, Partials } from "discord.js";
 import { fork } from "child_process";
 import notifier from "./notifier";
 import { DiscordClient, Message } from "./types";
@@ -33,15 +33,16 @@ const main = async () => {
 
     const client = new Client({
         intents: [
-            "GUILDS",
-            "GUILD_MEMBERS",
-            "GUILD_PRESENCES",
-            "GUILD_MESSAGES",
-            "GUILD_MESSAGE_TYPING",
-            "GUILD_EMOJIS_AND_STICKERS",
-            "DIRECT_MESSAGES",
-            "DIRECT_MESSAGE_TYPING",
+            "Guilds",
+            "GuildMembers",
+            "GuildPresences",
+            "GuildMessages",
+            "GuildMessageTyping",
+            "GuildEmojisAndStickers",
+            "DirectMessages",
+            "DirectMessageTyping",
         ],
+        partials: [Partials.Channel],
     }) as DiscordClient;
 
     client.commands = new Collection();

@@ -1,4 +1,4 @@
-import { MessageEmbed } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import prisma from "./database";
 import { DiscordClient } from "./types";
 
@@ -21,14 +21,14 @@ export default async (client: DiscordClient, msg: string, crn: number) => {
     });
 
     for (const user of users) {
-        const colorCode = msg.includes("Open") ? "GREEN" : "RED";
+        const colorCode = msg.includes("Open") ? "Green" : "Red";
         const description = `${user.class_alias}
         
         **Last Tracked Status:**
         Class Seats: ${user.CRN?.class_seats}
         Waitlist Seats: ${user.CRN?.waitlist_seats}
         `;
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(colorCode)
             .setTitle(msg)
             .setDescription(description)
