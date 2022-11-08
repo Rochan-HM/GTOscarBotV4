@@ -27,42 +27,42 @@ Type in \`/\` and select \`ClassBot\` to see the list of commands.
 `;
 
 export default {
-    name: "help",
-    aliases: ["commands"],
-    description: "Shows the Bot Usage Instructions!",
-    data: new SlashCommandBuilder()
-        .setName("help")
-        .setDescription("Shows the Bot Usage Instructions!"),
-    async execute_interaction(
-        interaction: ChatInputCommandInteraction,
-        client: DiscordClient
-    ) {
-        await interaction.reply({
-            embeds: [
-                new EmbedBuilder()
-                    .setColor("Green")
-                    .setTitle("Commands")
-                    .setDescription(help_message)
-                    .setTimestamp(),
-            ],
-            ephemeral: true,
-        });
-    },
-    async execute(client: DiscordClient, message: Message, args: any) {
-        await sendConfirmation({ message });
+  name: "help",
+  aliases: ["commands"],
+  description: "Shows the Bot Usage Instructions!",
+  data: new SlashCommandBuilder()
+    .setName("help")
+    .setDescription("Shows the Bot Usage Instructions!"),
+  async execute_interaction(
+    interaction: ChatInputCommandInteraction,
+    client: DiscordClient
+  ) {
+    await interaction.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setColor("Green")
+          .setTitle("Commands")
+          .setDescription(help_message)
+          .setTimestamp(),
+      ],
+      ephemeral: true,
+    });
+  },
+  async execute(client: DiscordClient, message: Message, args: any) {
+    await sendConfirmation({ message });
 
-        await sendEmbed({
-            message,
-            embed: new EmbedBuilder()
-                .setColor("Green")
-                .setTitle("Commands")
-                .setDescription(help_message)
-                .setTimestamp(),
-            client,
-        });
+    await sendEmbed({
+      message,
+      embed: new EmbedBuilder()
+        .setColor("Green")
+        .setTitle("Commands")
+        .setDescription(help_message)
+        .setTimestamp(),
+      client,
+    });
 
-        await message.delete();
-    },
+    await message.delete();
+  },
 };
 
 export { help_message };
