@@ -9,7 +9,8 @@
     "tsc": "tsc",
     "prisma": "prisma",
     "build": "del-cli build/ && tsc",
-    "heroku-postbuild-temp-with-deploy": "yarn prisma migrate deploy && yarn build && yarn install --production --ignore-scripts --prefer-offline",
+    "postinstall": "yarn prisma migrate deploy",
+    "heroku-postbuild-temp-with-deploy": " && yarn build && yarn install --production --ignore-scripts --prefer-offline",
     "heroku-postbuild": "yarn build && yarn install --production --ignore-scripts --prefer-offline"
   },
   "devDependencies": {
