@@ -9,6 +9,6 @@ COPY package.json .
 
 COPY . .
 
-RUN npm install --production && npm cache clean --force
+RUN npx prisma migrate deploy && npm install --production && npm cache clean --force
 
 CMD ["npm", "start"]
