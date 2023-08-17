@@ -9,6 +9,10 @@ COPY package.json .
 
 COPY . .
 
-RUN npm install --production && npm cache clean --force
+RUN apk update \
+    && apk add openssl \
+    && npm install --production \
+    && npm cache clean --force \    
+    && npm run build
 
 CMD ["npm", "start"]
