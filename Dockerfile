@@ -11,8 +11,8 @@ COPY . .
 
 RUN apk update \
     && apk add openssl \
-    && npm install --production \
-    && npm cache clean --force \    
+    && npm install \
+    && npm cache clean --force \
     && npm run build
 
 CMD ["npm", "start"]
